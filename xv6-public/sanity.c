@@ -25,10 +25,25 @@ int main(int argc, char **argv){
   int wpid;
   int retime, rutime, stime;
 
+  /* Tempo médio SLEEPING para cada tipo de processo. */
+  int total_cpu_bound_stime = 0;
+  int total_s_cpu_stime = 0;
+  int total_io_bound_stime = 0;
+
+  /* Tempo médio READY para cada tipo de processo. */
+  int total_cpu_bound_retime = 0;
+  int total_s_cpu_retime = 0;
+  int total_io_bound_retime = 0;
+
+  /* Tempo médio de TURNAROUND para cada tipo de processo. */
+  int total_cpu_bound_turnaround = 0;
+  int total_s_cpu_turnaround = 0;
+  int total_io_bound_turnaround = 0;
+  
   
   while ((wpid = wait2(&retime, &rutime, &stime)) > 0){
-    printf(1, "oiii");
     int wpid_mod3 = wpid % 3;
+    // adicionar switch aqui. Além de ficar mais legivel vai faciliar pegar as médias
     char *p_type = wpid_mod3 == 0 ? "CPU-Bound" : wpid_mod3 == 1 ? "S-CPU": "IO-Bound";
     printf(1, "%d %s\n", wpid, p_type);
     printf(1, "%d %d %d\n", retime, rutime, stime);

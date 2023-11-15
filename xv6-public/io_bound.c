@@ -9,7 +9,7 @@ int main() {
   for (int i = 0; i < 50; i++) {
     /* sleep(SLEEP_TIME); */
   }
-  sleep(1);
+  sleep(10);
 
   exit();
 }
