@@ -24,7 +24,7 @@ char* sbrk(int);
 int sleep(int);
 int uptime(void);
 
-int change_prio();
+int change_prio(int priority);
 int wait2(int *retime, int *rutime, int *stime);
 
 // ulib.c

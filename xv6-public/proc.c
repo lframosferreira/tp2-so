@@ -532,3 +532,24 @@ procdump(void)
     cprintf("\n");
   }
 }
+
+
+
+
+int change_prio(int priority){
+  int pid = myproc()->pid;
+
+  struct proc *p;
+  acquire(&ptable.lock);
+  for (p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+    if (p->pid == pid){
+      // change prio of proc
+
+      release(&ptable.lock);
+      return 0;
+    }
+  }
+  release(&ptable.lock);
+  cprintf("Could'nt find process with pid: %d\n", pid);
+  return -1;
+}

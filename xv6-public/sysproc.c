@@ -91,8 +91,15 @@ sys_uptime(void)
 }
 
 int sys_change_prio(void){
-  int priority = 2;
-  return priority;
+  int priority;
+
+  if (argint(0, &priority) < 0)
+    return -1;
+
+  if(priority != 1 && priority != 2 && priority != 3)
+    return -1;
+  
+  return change_prio(priority);
 }
 
 int sys_wait2(void){
