@@ -20,11 +20,19 @@ int main(int argc, char **argv){
           printf(1, "Não deveria cair aqui\n");
       }
     }
-    printf(1, "%i = %d\n", i);
   }
+
+  int wpid;
+  int retime, rutime, stime;
+
   
+  while ((wpid = wait2(&retime, &rutime, &stime)) > 0){
+    printf(1, "oiii");
+    int wpid_mod3 = wpid % 3;
+    char *p_type = wpid_mod3 == 0 ? "CPU-Bound" : wpid_mod3 == 1 ? "S-CPU": "IO-Bound";
+    printf(1, "%d %s\n", wpid, p_type);
+    printf(1, "%d %d %d\n", retime, rutime, stime);
+  };
 
-  while (wait() > 0);
-
-  return 0;
+  exit();
 }
