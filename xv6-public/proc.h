@@ -50,6 +50,9 @@ struct proc {
   struct inode *cwd;           // Current directory
   char name[16];               // Process name (debugging)
 
+
+  int priority; // Prioridade do processo {1, 2 ou 3}
+
   uint ctime; // Tempo quando o processo foi criado
   int stime; //Tempo SLEEPING
   int retime; //Tempo READY(RUNNABLE) time
