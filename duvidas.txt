@@ -1,0 +1,6 @@
+1. Adicione a linha seguinte ao arquivo param.h e inicialize o valor INTERV para 5.
+Utilize essa constante para estabelecer o intervalo entre preempções.
+
+Adicionei a linha mas não sei onde usar a constante
+
+2. Macros iniciando com número

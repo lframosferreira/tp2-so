@@ -12,7 +12,7 @@
 \usepackage{caption}
 \usepackage{float}
 
-\title{Redes de Computadores \\ \large Trabalho Prático 2}
+\title{Sistemas Operacionais \\ \large Trabalho Prático 2}
 \author{Luís Felipe Ramos Ferreira}
 \date{\href{mailto:lframos\_ferreira@outlook.com}{\texttt{lframos\_ferreira@outlook.com}}
 }
@@ -37,10 +37,66 @@ pode ser encontrado \href{https://github.com/lframosferreira/tp2-so}{neste
 
 \begin{enumerate}
       \item Qual a política de escalonamento é utilizada atualmente no XV6?
+
+            A política de escalonamento utilizada no XV6 é uma política de
+            \href{https://en.wikipedia.org/wiki/Round-robin_scheduling}{\textit{Round
+                        Robin}}, ou seja, o escalonador irá checar
+            continuamente a lista de processos disponíveis para serem
+            executados e irá
+            fornecer um tempo de processamento a cada um deles. O algoritmo é
+            simples de se implementar, simples de compreender e não causa
+            inanição aos
+            processos, embora possua pontos negativos como os gargalos causados
+            pela
+            constante troca de contexto, a depende do tempo que cada processo
+            terá para
+            execução na CPU. É um algoritmo preemptivo, uma vez que força a
+            saída de um processo da CPU caso o limite de tempo tenha sidoa
+            tingido.\@
+
       \item Quais processos essa política seleciona para rodar?
+
+            A política citada seleciona os processos que estão disponíveis para
+            serem executados conforme eles são checados na lista de processos
+            disponíveis.
+            Não há um tipo de prioridade estabelecida em cima sobre os
+            processos, ou seja, os processos terão uma certa quantidade de
+            tempo a cada
+            momento que o escalonador encontrá-los na lista de processos
+            disponíveis. É
+            importante frisar que o escalonador irá checar \texttt{apenas} os
+            processos marcados como disponíveis para serem executados, ou seja,
+            processos dormindo ou esperando algum I/0 não receberão tempo de
+            processamento
+            da CPU a menos que estejam prontos para serem executados e marcados
+            como tal na
+            lista de processos do sistema.
+
       \item O que acontece quando um processo retorna de uma tarefa de I/O?
-      \item O que acontece quando um processo é cirado e quando ou quão
+
+            O processo é marcado como \textit{RUNNABLE}, isto é, está pronto
+            para executar e entra para a lista de processos que podem ser
+            executados.
+            Assim, ele ventualmente será escolhido pelo escalonador para
+            começar a rodar. ISSO MSM?
+
+      \item O que acontece quando um processo é criado e quando ou quão
             frequente o escalonamento acontece?
+
+            Quando um processo é criado, uma referência para ele é
+            criada no espaço de memória do sistema operacional, e esse novo
+            processo deve possuir alocado para ele um espaço de memória de
+            usuário onde irá
+            estar armazenado seu identificador, código, dados, pilha de
+            execução e \textit{heap}. Um processo pode ser criado no XV6 por
+            meio da chamada de sistema \textit{fork()}, que irá criar uma cópia
+            do processo que o criou. Para executar um novo programa, a chamada
+            de sistema
+            \textit{exec()}
+            deve ser utilizada.
+
+            Não sei de quanto em quanto tempo, mas provavelmente a cada 1 tick
+            do clock como dito no proprio enunciado logo abaixo.
 \end{enumerate}
 
 \subsection{Algoritmos implementados}
@@ -76,9 +132,10 @@ Em s
             \begin{itemize}
                   \item
 
-                        \href{https://pekopeko11.sakura.ne.jp/unix_v6/xv6-book/en/index.html}{\textit{xv6
+                        \href{https://pdos.csail.mit.edu/6.828/2023/xv6/book-riscv-rev3.pdf}{\textit{xv6:
                                     a
-                                    simple, Unix-like teaching operating system}}
+                                    simple, Unix-like teaching operating
+                                    system}}
             \end{itemize}
 
       \item Youtube:
