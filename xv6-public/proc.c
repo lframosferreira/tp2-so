@@ -696,9 +696,14 @@ int wait2(int *retime, int *rutime, int *stime) {
         p->killed = 0;
         p->state = UNUSED;
 
+        
         *retime = p->retime;
         *rutime = p->rutime;
         *stime = p->stime;
+        p->priority = 1;
+        p->retime = 0;
+        p->rutime = 0;
+        p->stime = 0;
 
         release(&ptable.lock);
         return pid;
