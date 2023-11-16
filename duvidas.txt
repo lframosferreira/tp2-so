@@ -4,3 +4,5 @@ Utilize essa constante para estabelecer o intervalo entre preempções. Não sei
 2. Macros iniciando com número
 
 3. Checar se fila multinivel faz sentido com professor
+
+4. Perguntar sobre set_prio syscall
