@@ -307,6 +307,7 @@ int wait(void) {
 //       via swtch back to the scheduler.
 void scheduler(void) {
   struct proc *p;
+  struct proc *highest_priority_p = 0;
   struct cpu *c = mycpu();
   c->proc = 0;
 
@@ -321,80 +322,29 @@ void scheduler(void) {
     // Loop over process table looking for process to run.
     acquire(&ptable.lock);
 
-    int found_prio_3_proc = 0; // Flag auxiliar para checar se devemos procurar
-                               // por processos com prioridade menor agora
     for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
       if (p->state != RUNNABLE)
         continue;
 
-      if (p->priority != 3)
-        continue;
-      found_prio_3_proc = 1;
+      // Achei primeiro processo que é RUNNABLE, e ele, por enquanto, é o de maior prioridade
+      highest_priority_p = p;
 
-      // Switch to chosen process.  It is the process's job
-      // to release ptable.lock and then reacquire it
-      // before jumping back to us.
-      c->proc = p;
-      switchuvm(p);
-      p->state = RUNNING;
-
-      p->rutime++; // Aumento running time count do processo
-
-      swtch(&(c->scheduler), p->context);
-      switchkvm();
-
-      // Process is done running for now.
-      // It should have changed its p->state before coming back.
-      c->proc = 0;
-
-      /* Ao final da execução daquele processo, passo mais uma vez por cada
-      processo e faço as checagens necessárias, isto é, checo se limite de tempo
-      de espera passou para atualizar prioridade e somo tempo de espera. */
-      struct proc *waiting_p;
-      for (waiting_p = ptable.proc; waiting_p < &ptable.proc[NPROC];
-           waiting_p++) {
-        waiting_p->ctime++; // tempo de turnaround?
-        if (waiting_p->pid != p->pid) {
-          if (waiting_p->state == SLEEPING){
-            waiting_p->stime++;
-          } else { // Caso READY/RUNNABLE
-            waiting_p->retime++;
-          }
-        }
-        if (waiting_p->priority == 2 && waiting_p->retime >= T_2TO3) {
-          waiting_p->retime = 0;
-          waiting_p->priority = 3;
-        }
-        if (waiting_p->priority == 1 && waiting_p->retime >= T_1TO2) {
-          waiting_p->retime = 0;
-          waiting_p->priority = 2;
+      // Checo a lista pra ver se encontro algum processo de prioridade maior que a do atual
+      for (p = ptable.proc; p < &ptable.proc[NPROC]; p++){
+        if (p->state != RUNNABLE) 
+          continue;
+        // Encontrei alguém maior
+        if (p->priority > highest_priority_p->priority){
+          highest_priority_p = p;
         }
       }
-    }
 
-    /* Encontrei processo de prioridade 1, então
-    loopo denovo procurando processos com a mesma prioridade. */
-    if (found_prio_3_proc == 1) {
-      release(&ptable.lock);
-      continue;
-    }
-
-    /* Não encontrei processo de prioridade 3, então vou olhar
-    a lista toda e achar processoc om prioridade 2. */
-
-    int found_prio_2_proc = 0;
-
-    for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
-      if (p->state != RUNNABLE)
-        continue;
-      if (p->priority == 3) {
-        found_prio_2_proc = 1; // gambiarra pra voltar pro inicio do loop
+      // Se highest_priority_p for NULL, quer dizer que nenhum processo é RUNNABLE, então loop denovo
+      if (highest_priority_p == 0){
         break;
       }
-      if (p->priority != 2)
-        continue;
 
-      found_prio_2_proc = 1;
+      p = highest_priority_p;
 
       // Switch to chosen process.  It is the process's job
       // to release ptable.lock and then reacquire it
@@ -402,6 +352,7 @@ void scheduler(void) {
       c->proc = p;
       switchuvm(p);
       p->state = RUNNING;
+      p->time_slice = INTERV;
 
       p->rutime++; // Aumento running time count do processo
 
@@ -436,61 +387,7 @@ void scheduler(void) {
         }
       }
     }
-    /* Ou eu achei um prioridade 3 e estou voltando pro início do loop com
-    gambiarra, ou achei algum com prioridade 2 e posso também voltar ao início
-    do loop. O importante é que não possui apenas prioridades 1s na lista. */
-    if (found_prio_2_proc == 1) {
-      release(&ptable.lock);
-      continue;
-    }
 
-    for (p = ptable.proc; p < &ptable.proc[NPROC]; p++) {
-      if (p->state != RUNNABLE)
-        continue;
-
-      if (p->priority == 2 || p->priority == 3)
-        break;
-
-      // Switch to chosen process.  It is the process's job
-      // to release ptable.lock and then reacquire it
-      // before jumping back to us.
-      c->proc = p;
-      switchuvm(p);
-      p->state = RUNNING;
-
-      p->rutime++; // Aumento running time count do processo
-
-      swtch(&(c->scheduler), p->context);
-      switchkvm();
-
-      // Process is done running for now.
-      // It should have changed its p->state before coming back.
-      c->proc = 0;
-
-      /* Ao final da execução daquele processo, passo mais uma vez por cada
-      processo e faço as checagens necessárias, isto é, checo se limite de tempo
-      de espera passou para atualizar prioridade e somo tempo de espera. */
-      struct proc *waiting_p;
-      for (waiting_p = ptable.proc; waiting_p < &ptable.proc[NPROC];
-           waiting_p++) {
-        waiting_p->ctime++; // tempo de turnaround?
-        if (waiting_p->pid != p->pid) {
-          if (waiting_p->state == SLEEPING){
-            waiting_p->stime++;
-          } else { // Caso READY/RUNNABLE
-            waiting_p->retime++;
-          }
-        }
-        if (waiting_p->priority == 2 && waiting_p->retime >= T_2TO3) {
-          waiting_p->retime = 0;
-          waiting_p->priority = 3;
-        }
-        if (waiting_p->priority == 1 && waiting_p->retime >= T_1TO2) {
-          waiting_p->retime = 0;
-          waiting_p->priority = 2;
-        }
-      }
-    }
     release(&ptable.lock);
   }
 }
