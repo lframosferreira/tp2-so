@@ -186,6 +186,7 @@ UPROGS=\
 	_cpu_bound\
 	_s_cpu\
 	_io_bound\
+	_cpu_bound_test\
 
 fs.img: mkfs README $(UPROGS)
 	./mkfs fs.img README $(UPROGS)
@@ -255,7 +256,7 @@ qemu-nox-gdb: fs.img xv6.img .gdbinit
 EXTRA=\
 	mkfs.c ulib.c user.h cat.c echo.c forktest.c grep.c kill.c\
 	ln.c ls.c mkdir.c rm.c stressfs.c usertests.c wc.c zombie.c\
-	printf.c umalloc.c\ myprogram.c\ sanity.c\ cpu_bound.c\ s_cpu.c\ io_bound.c\
+	printf.c umalloc.c\ myprogram.c\ sanity.c\ cpu_bound.c\ s_cpu.c\ io_bound.c\ cpu_bound_test.c\
 	README dot-bochsrc *.pl toc.* runoff runoff1 runoff.list\
 	.gdbinit.tmpl gdbutil\
 

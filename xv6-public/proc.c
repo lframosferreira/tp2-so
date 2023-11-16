@@ -353,18 +353,21 @@ void scheduler(void) {
       struct proc *waiting_p;
       for (waiting_p = ptable.proc; waiting_p < &ptable.proc[NPROC];
            waiting_p++) {
+        waiting_p->ctime++; // tempo de turnaround?
         if (waiting_p->pid != p->pid) {
-          waiting_p->retime++;
+          if (waiting_p->state == SLEEPING){
+            waiting_p->stime++;
+          } else { // Caso READY/RUNNABLE
+            waiting_p->retime++;
+          }
         }
         if (waiting_p->priority == 2 && waiting_p->retime >= T_2TO3) {
           waiting_p->retime = 0;
           waiting_p->priority = 3;
-          waiting_p->rutime = 0;
         }
         if (waiting_p->priority == 1 && waiting_p->retime >= T_1TO2) {
           waiting_p->retime = 0;
           waiting_p->priority = 2;
-          waiting_p->rutime = 0;
         }
       }
     }
@@ -415,18 +418,21 @@ void scheduler(void) {
       struct proc *waiting_p;
       for (waiting_p = ptable.proc; waiting_p < &ptable.proc[NPROC];
            waiting_p++) {
+        waiting_p->ctime++; // tempo de turnaround?
         if (waiting_p->pid != p->pid) {
-          waiting_p->retime++;
+          if (waiting_p->state == SLEEPING){
+            waiting_p->stime++;
+          } else { // Caso READY/RUNNABLE
+            waiting_p->retime++;
+          }
         }
         if (waiting_p->priority == 2 && waiting_p->retime >= T_2TO3) {
           waiting_p->retime = 0;
           waiting_p->priority = 3;
-          waiting_p->rutime = 0;
         }
         if (waiting_p->priority == 1 && waiting_p->retime >= T_1TO2) {
           waiting_p->retime = 0;
           waiting_p->priority = 2;
-          waiting_p->rutime = 0;
         }
       }
     }
@@ -467,18 +473,21 @@ void scheduler(void) {
       struct proc *waiting_p;
       for (waiting_p = ptable.proc; waiting_p < &ptable.proc[NPROC];
            waiting_p++) {
+        waiting_p->ctime++; // tempo de turnaround?
         if (waiting_p->pid != p->pid) {
-          waiting_p->retime++;
+          if (waiting_p->state == SLEEPING){
+            waiting_p->stime++;
+          } else { // Caso READY/RUNNABLE
+            waiting_p->retime++;
+          }
         }
         if (waiting_p->priority == 2 && waiting_p->retime >= T_2TO3) {
           waiting_p->retime = 0;
           waiting_p->priority = 3;
-          waiting_p->rutime = 0;
         }
         if (waiting_p->priority == 1 && waiting_p->retime >= T_1TO2) {
           waiting_p->retime = 0;
           waiting_p->priority = 2;
-          waiting_p->rutime = 0;
         }
       }
     }

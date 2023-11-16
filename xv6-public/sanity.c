@@ -40,9 +40,9 @@ int main(int argc, char **argv) {
   int total_io_bound_retime = 0;
 
   /* Tempo médio de TURNAROUND para cada tipo de processo. */
-  /* int total_cpu_bound_turnaround = 0;
+  int total_cpu_bound_turnaround = 0;
   int total_s_cpu_turnaround = 0;
-  int total_io_bound_turnaround = 0; */
+  int total_io_bound_turnaround = 0;
 
   while ((wpid = wait2(&retime, &rutime, &stime)) > 0) {
     int wpid_mod3 = wpid % 3;
@@ -55,6 +55,7 @@ int main(int argc, char **argv) {
 
       total_cpu_bound_stime += stime;
       total_cpu_bound_retime += retime;
+      total_cpu_bound_turnaround += retime + rutime + stime;
 
       break;
     case S_CPU:
@@ -62,6 +63,7 @@ int main(int argc, char **argv) {
 
       total_s_cpu_stime += stime;
       total_s_cpu_retime += retime;
+      total_s_cpu_turnaround += retime + rutime + stime;
 
       break;
     case IO_BOUND:
@@ -69,6 +71,7 @@ int main(int argc, char **argv) {
 
       total_io_bound_stime += stime;
       total_io_bound_retime += retime;
+      total_io_bound_turnaround += retime + rutime + stime;
 
       break;
     default:
@@ -79,10 +82,20 @@ int main(int argc, char **argv) {
     printf(1, "%d %d %d\n", retime, rutime, stime);
   };
 
-  printf(1, "Tempo médio no estado SLEEPING\n");
-  printf(1, "CPU-Bound: %d\n", total_cpu_bound_stime / 3 * n);
-  printf(1, "S-CPU: %d\n", total_s_cpu_stime / 3 * n);
-  printf(1, "IO-Bound: %d\n", total_io_bound_stime / 3 * n);
+  printf(1, "Tempo medio no estado SLEEPING\n");
+  printf(1, "CPU-Bound: %d\n", total_cpu_bound_stime / (3 * n));
+  printf(1, "S-CPU: %d\n", total_s_cpu_stime / (3 * n));
+  printf(1, "IO-Bound: %d\n", total_io_bound_stime / (3 * n));
+
+  printf(1, "Tempo medio no estado READY\n");
+  printf(1, "CPU-Bound: %d\n", total_cpu_bound_retime / (3 * n));
+  printf(1, "S-CPU: %d\n", total_s_cpu_retime / (3 * n));
+  printf(1, "IO-Bound: %d\n", total_io_bound_retime / (3 * n));
+
+  printf(1, "Tempo medio no estado TURNAROUND\n");
+  printf(1, "CPU-Bound: %d\n", total_cpu_bound_turnaround / (3 * n));
+  printf(1, "S-CPU: %d\n", total_s_cpu_turnaround / (3 * n));
+  printf(1, "IO-Bound: %d\n", total_io_bound_turnaround / (3 * n));
 
 
   exit();
