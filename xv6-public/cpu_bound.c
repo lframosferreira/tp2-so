@@ -8,7 +8,7 @@
 int main(){
 
   for (int i = 0; i < LOOPS; i++){
-    for (int j = 0; j < ITERATIONS * 1000; j++){
+    for (int j = 0; j < ITERATIONS; j++){
       continue;
     }
   }
