@@ -8,8 +8,7 @@ int main(int argc, char **argv)
 {  
     for (int i = 0; i < NUMBER_OF_PROCESSES; i++){
         if (fork() == 0){
-            argv[1] = (char *)(((getpid() % 3) + 1) + '0');
-
+            change_prio((getpid() % 3) + 1);
             exec("cpu_bound_test", argv);
         }
     }

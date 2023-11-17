@@ -2,7 +2,6 @@
 #include "stat.h"
 #include "user.h"
 
-
 #define LOOPS 20
 #define ITERATIONS 1000000
 

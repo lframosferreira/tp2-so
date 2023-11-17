@@ -351,9 +351,9 @@ void scheduler(void) {
       // before jumping back to us.
       c->proc = p;
       switchuvm(p);
+
       p->state = RUNNING;
       p->time_slice = INTERV;
-
       p->rutime++; // Aumento running time count do processo
 
       swtch(&(c->scheduler), p->context);
@@ -377,11 +377,11 @@ void scheduler(void) {
             waiting_p->retime++;
           }
         }
-        if (waiting_p->priority == 2 && waiting_p->retime >= T_2TO3) {
+        if (waiting_p->priority == 2 && waiting_p->retime >= P2TO3) {
           waiting_p->retime = 0;
           waiting_p->priority = 3;
         }
-        if (waiting_p->priority == 1 && waiting_p->retime >= T_1TO2) {
+        if (waiting_p->priority == 1 && waiting_p->retime >= P1TO2) {
           waiting_p->retime = 0;
           waiting_p->priority = 2;
         }
