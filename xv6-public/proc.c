@@ -378,12 +378,10 @@ void scheduler(void) {
           }
         }
         if (waiting_p->priority == 2 && waiting_p->retime >= P2TO3) {
-          cprintf("2to3\n");
           waiting_p->retime = 0;
           waiting_p->priority = 3;
         }
         if (waiting_p->priority == 1 && waiting_p->retime >= P1TO2) {
-          cprintf("1to2\n");
           waiting_p->retime = 0;
           waiting_p->priority = 2;
         }
