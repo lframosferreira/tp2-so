@@ -39,20 +39,24 @@ pode ser encontrado \href{https://github.com/lframosferreira/tp2-so}{neste
       \item Qual a política de escalonamento é utilizada atualmente no XV6?
 
             A política de escalonamento utilizada no XV6 é uma política de
+
             \href{https://en.wikipedia.org/wiki/Round-robin_scheduling}{\textit{Round
-                        Robin}}, ou seja, o escalonador irá checar
+                        Robin}} sem prioridades, ou seja, o escalonador irá
+            checar
             continuamente a lista de processos disponíveis para serem
             executados e irá
-            fornecer um tempo de processamento a cada um deles. O algoritmo é
+            fornecer um tempo de processamento a cada um deles, sem que exista
+            uma política de priorização dentre um processo a outro. O algoritmo
+            é
             simples de se implementar, simples de compreender e não causa
             inanição aos
             processos, embora possua pontos negativos como os gargalos causados
             pela
-            constante troca de contexto, a depende do tempo que cada processo
+            constante troca de contexto, a depender do tempo que cada processo
             terá para
             execução na CPU. É um algoritmo preemptivo, uma vez que força a
-            saída de um processo da CPU caso o limite de tempo tenha sidoa
-            tingido.\@
+            saída de um processo da CPU caso o limite de tempo tenha sido
+            atingido.\@
 
       \item Quais processos essa política seleciona para rodar?
 
@@ -66,7 +70,7 @@ pode ser encontrado \href{https://github.com/lframosferreira/tp2-so}{neste
             disponíveis. É
             importante frisar que o escalonador irá checar \texttt{apenas} os
             processos marcados como disponíveis para serem executados, ou seja,
-            processos dormindo ou esperando algum I/0 não receberão tempo de
+            processos dormindo ou esperando algum I/O não receberão tempo de
             processamento
             da CPU a menos que estejam prontos para serem executados e marcados
             como tal na
@@ -77,31 +81,43 @@ pode ser encontrado \href{https://github.com/lframosferreira/tp2-so}{neste
             O processo é marcado como \textit{RUNNABLE}, isto é, está pronto
             para executar e entra para a lista de processos que podem ser
             executados.
-            Assim, ele ventualmente será escolhido pelo escalonador para
-            começar a rodar. ISSO MSM?
+            Assim, ele eventualmente será escolhido pelo escalonador para
+            começar a rodar.
 
       \item O que acontece quando um processo é criado e quando ou quão
             frequente o escalonamento acontece?
 
             Quando um processo é criado, uma referência para ele é
-            criada no espaço de memória do sistema operacional, e esse novo
-            processo deve possuir alocado para ele um espaço de memória de
+            criada no espaço de memória do sistema operacional, e a esse
+            processo deve ser alocado um espaço de memória de
             usuário onde irá
             estar armazenado seu identificador, código, dados, pilha de
             execução e \textit{heap}. Um processo pode ser criado no XV6 por
             meio da chamada de sistema \textit{fork()}, que irá criar uma cópia
-            do processo que o criou. Para executar um novo programa, a chamada
+            do processo que fez a chamada da função. Para executar um novo
+            programa, a chamada
             de sistema
             \textit{exec()}
             deve ser utilizada.
 
-            Não sei de quanto em quanto tempo, mas provavelmente a cada 1 tick
-            do clock como dito no proprio enunciado logo abaixo.
+            O processo de escalonamento acontece, na implementação original do
+            XV6, a cada 1 tick do clock. No entanto, esse parâmetro pode ser
+            modificado
+            para alterar o período entre as preempções realizadas pelo
+            escalonador.
+
 \end{enumerate}
 
-\subsection{Algoritmos implementados}
+\section{Algoritmos implementados}
 
-Por s
+\subsection{Escalonador}
+
+Uma das requisições do trabalho foi a de implementar uma modificação na
+política de escalonamento do \textit{kernel} do XV6. Em particular, foi
+proposta a implementação de um escalonamento por meio de filas multinível.
+
+
+\subsection{Chamadas de sistema}
 
 \section{Análise de resultados}
 

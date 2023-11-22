@@ -106,7 +106,6 @@ trap(struct trapframe *tf)
      tf->trapno == T_IRQ0+IRQ_TIMER)
     {
       if (myproc()->time_slice != 0){
-        // cprintf("ts => %d\n", myproc()->time_slice);
         myproc()->time_slice--;
       }else {
         yield();

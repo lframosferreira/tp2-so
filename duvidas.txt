@@ -1,8 +1,7 @@
-1. Adicione a linha seguinte ao arquivo param.h e inicialize o valor INTERV para 5.
-Utilize essa constante para estabelecer o intervalo entre preempções. Não sei como fazer isso, nem entendi onde no codigo devo fazer essa checagem.
+1. Set_prio nao faz sentido. Por enquanto chamamos change_prio no programa cpu_bound_test ao criar um novo processo, mas isso ta confuso
 
-2. Macros iniciando com número
+2. Loop de escalonamento: estamos voltando ao inicio dps que executamos algo. Provavelmente não é o ideal
 
-3. Checar se fila multinivel faz sentido com professor
+3. Não consguimos chamar o yield()
 
-4. Perguntar sobre set_prio syscall
+4 Especificação do que o programa s_cpu deve fazer também não faz sentido algum
