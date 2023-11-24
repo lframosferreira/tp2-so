@@ -32,3 +32,4 @@ SYSCALL(uptime)
 
 SYSCALL(change_prio)
 SYSCALL(wait2)
+SYSCALL(yield2)

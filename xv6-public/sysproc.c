@@ -113,5 +113,9 @@ int sys_wait2(void){
     return -1;
 
   return wait2((int *)retime, (int *)rutime, (int *)stime);
+}
 
+int sys_yield2(void){
+  yield();
+  return 1;
 }
