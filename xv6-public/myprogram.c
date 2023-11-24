@@ -15,7 +15,7 @@ int main(int argc, char **argv)
     
     int wpid;
     while ((wpid = wait()) > 0){
-        printf(1, "pid: %d\n", wpid);
+        printf(1, "pid: %d original prio: %d\n", wpid, (wpid % 3) + 1);
     }
     exit();
 }

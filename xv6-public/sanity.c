@@ -92,7 +92,7 @@ int main(int argc, char **argv) {
   printf(1, "S-CPU: %d\n", total_s_cpu_retime / (3 * n));
   printf(1, "IO-Bound: %d\n", total_io_bound_retime / (3 * n));
 
-  printf(1, "Tempo medio no estado TURNAROUND\n");
+  printf(1, "Tempo medio de TURNAROUND\n");
   printf(1, "CPU-Bound: %d\n", total_cpu_bound_turnaround / (3 * n));
   printf(1, "S-CPU: %d\n", total_s_cpu_turnaround / (3 * n));
   printf(1, "IO-Bound: %d\n", total_io_bound_turnaround / (3 * n));
