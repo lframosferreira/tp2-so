@@ -3,7 +3,8 @@
 #include "user.h"
 
 #define LOOPS 20
-#define ITERATIONS 1000000
+// #define ITERATIONS 1000000
+#define ITERATIONS 100
 
 int main(){
 

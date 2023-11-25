@@ -114,10 +114,55 @@ pode ser encontrado \href{https://github.com/lframosferreira/tp2-so}{neste
 
 Uma das requisições do trabalho foi a de implementar uma modificação na
 política de escalonamento do \textit{kernel} do XV6. Em particular, foi
-proposta a implementação de um escalonamento por meio de filas multinível.
-
+proposta a implementação de um escalonamento por meio de filas multinível. Para
+isso, a função
+\textit{scheduler()} do arquivo \textit{proc.c} foi alterada de modo a
+satisfazer essa política. Em suma, a nova implementação agora irá
+checar toda a lista de processos em busca daquele processo que possui a maior
+prioridade e, ao fim da busca, esse processo será o próximo a ser executado.
+Não foi utilizada nenhuma estrutura de dados
+customizada para facilitar essa checagem, como uma fila de prioridades. A busca
+pelo processo de maior prioridade é feita de forma linear na lista de
+processos, para facilitar a implementação.
 
 \subsection{Chamadas de sistema}
+
+Ao todo, quatro novas chamdas de sistema foram implementadas para facilitar o
+desenvolvimento do trabalho, e o propósito de cada uma delas está desrito a
+seguir.
+
+\subsubsection{change\_prio()}
+
+Conforme especificado no enunciado, a chamada de sistema
+\textit{change\_prio()} deve ter utilizada para mudar
+a prioridade do processo atual. Sua implementação é simples, e basta trafegar
+por toda a lista de processos, encontrar o proesso com o identificador correto
+e mudarsua prioridade conforme o parâmetro desejado.
+
+\subsubsection{wait2()}
+
+Conforme também especificado no enunciado, a chamada de sistema
+\textit{wait2()} deve ser utilizada como uma
+extensão da chamada de sistema \textit{wait()} mas com algumas ações a mais. Em
+particular, ela deve também atribuir a três posições de memória os valores
+totais de tempo que o processo passou nos estados \textit{READY},
+\textit{RUNNING} e \textit{SLEEPING}, de modo que tais valores possam ser
+utilizados posteriormente na análise de dados das modificações propostas para o
+escalonador.
+
+\subsubsection{yield2()}
+
+A chamada de sustema \textit{yield2()} se trata apenas de uma solução paliativa
+para que a função \textit{yield()} seja utilizada
+nos programas do tipo S-CPU. Sem defini-lá, não era possível utiliar
+\textit{yield()} em um programa de usuário pois não existia uma interface
+definida para seu uso em espaço de usuário no \textit{kernel} do XV6.
+
+Em suma, a chamada \textit{yield2()} apenas chama a função \textit{yield()}.
+
+\subsubsection{set\_prio()}
+
+A chamada de sistema \textit{set\_prio()} deve ser utilizada para modificar a prioridade de um processo
 
 \section{Análise de resultados}
 
