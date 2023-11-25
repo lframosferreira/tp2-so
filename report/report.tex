@@ -162,15 +162,79 @@ Em suma, a chamada \textit{yield2()} apenas chama a função \textit{yield()}.
 
 \subsubsection{set\_prio()}
 
-A chamada de sistema \textit{set\_prio()} deve ser utilizada para modificar a prioridade de um processo
+A chamada de sistema \textit{set\_prio()} deve ser utilizada para modificar a
+prioridade de um processo. Seu principal intuito é de ajudar nos testes do
+escalonador e checar se ele está funcionando da forma que deveria.
+
+Da maneira que interpretamos, uma boa forma de implementar o
+\textit{set\_prio()} seria como uma extensão da chamada de sistema
+\textit{fork()}, mas que permita a escolha dinâmica daprioridade do novo
+processo criado. Dessa forma, sua implementação foi feita exatamente como uma
+cópia de \textit{fork()}, mas a prioridade \(prio\) dos processos criados a
+partir dela
+não é 2 por padrão, mas seguem a seguinte equação a partir de seus próprios
+identificadores \(pid\):
+
+\[prio = (pid \mod 3) + 1\]
+
+Portanto, um processo com identificador 15 teria prioridade 1, e um processo
+com identificador 29 teria prioridae 3, por exemplo.
+
+\subsection{Programas implementados}
+
+Três tipos de programa deveriam ser criados para execuções no trabalho, sendo
+eles
+os programas \textit{CPU-Bound}, \textit{S-CPU} e \textit{IO-Bound}, e a
+especificação de como cada um eles funciona está no enunciado.
+
+Outros dois programas também foram implementados, sendo eles o progrma
+\textit{sanity}, cujo objetivo é testar e analisar os tempos que cada processo
+passou em cada estado, e um programa extra, que nós denominamos
+\textit{myprogram}, cujo objetivo principal é testar o correto funcionamento do
+novo escalonador. As especificações do programa \textit{sanity} estão definidas
+no enunciado. Alguns detalhes relativos ao programa
+\textit{myprogram}, no entanto, são detalhados abaixo.
+
+\subsubsection{myprogram.c}
+
+O programa chama, dentro de um \textit{loop} de tamanho 20, a chamada de
+sistema \textit{set\_prio()}, que irá criar os novos processos e atribuir uma
+prioridade a eles com base no identificador que receberem.
+Após isso, o programa chama dentro de um laço \textit{while} a chamada de
+sistema \textit{wait()} e, sempre que um de seus processos filhos finaliza,
+imprime em tela seu identificador e sua prioridade inicial, isto é,prioridade
+estabelecida no moment da criação.
+O laço e o programa finalizam quando todos os processos filhos forem
+finalizados.
+
+\subsection{Mudança no intervalo de preempção}
+
+Para alterar o intervalo de preempção, bastou alterar uma linha do arquivo
+\textit{trap.c} e adicionar um campo à estrutura \textit{proc}. O novo campo,
+denominado \textit{time\_slice}, é sempre inicializado com o valor de
+\texttt{INTERV} quando um processo inicia sua execução na CPU, e contêm quantos
+\textit{ticks} de \textit{clock} cada processo ainda tem.
+
+No arquivo \textit{trap.c}, a preempção só ocorre quando o processo que está na
+CPU tem um valor de \textit{time\_slice} igual a 0, ou seja, já esgotou o tempo
+que tinha na CPU.
 
 \section{Análise de resultados}
 
-A p
+\subsection{Tempo médio em cada estado}
+
+\subsection{Escalonamento}
 
 \section{Conclusão}
 
-Em s
+Em suma, o segundo trabalho prática da disciplina
+permitiu um aprendizado ainda mais aprofundado acerca de como um sistema
+operacional funciona, uma vez que abriu portas para explorar, modificar e
+analisar como um \textit{kernel} realmente é implementado.
+
+Fazer as modificações próprias para alterar as políticas de escalonamento e
+preempção tornaram a compreensão de como eles operam mais simples, e ampliaram
+a visão de como um processo realmente é manipulado dentro do sistema.
 
 \section{Referências}
 

@@ -8,7 +8,7 @@ int main(int argc, char **argv)
 {  
     for (int i = 0; i < NUMBER_OF_PROCESSES; i++){
         if (set_prio() == 0){
-            exec("cpu_bound_test", argv);
+            exec("cpu_bound", argv);
         }
     }
     
