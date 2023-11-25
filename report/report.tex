@@ -223,7 +223,13 @@ que tinha na CPU.
 
 \subsection{Tempo médio em cada estado}
 
-O tempo médio em cada estado
+O tempo médio em cada estado é uma das formas de se compreender como cada um
+dos tipos de processo (CPU-Bound, S-CPU e IO-Bound) se comportam dentro do
+sistema. Para testar isso, utilizamos o programa \textit{sanity}. Abaixo,
+podemos ver o resultado da execução do \textit{sanity} para 30 processos, isto
+é, 10 processos de cada tipo.
+
+POR EXEMPLO AQUI
 
 \subsection{Escalonamento}
 
@@ -300,26 +306,46 @@ de \textit{myprogram}, mas com o escalonador padrão do XV6.
             \textbf{Ordem de finalização} & \textbf{PID} & \textbf{Prioridade}
             \\
             \hline
-            1                             & 4            & 2                   \\
-            2                             & 5            & 3                   \\
-            3                             & 6            & 1                   \\
-            4                             & 7            & 2                   \\
-            5                             & 8            & 3                   \\
-            6                             & 9            & 1                   \\
-            7                             & 10           & 2                   \\
-            8                             & 11           & 3                   \\
-            9                             & 12           & 1                   \\
-            10                            & 13           & 2                   \\
-            11                            & 14           & 3                   \\
-            12                            & 15           & 1                   \\
-            13                            & 16           & 2                   \\
-            14                            & 17           & 3                   \\
-            15                            & 18           & 1                   \\
-            16                            & 19           & 2                   \\
-            17                            & 20           & 3                   \\
-            18                            & 21           & 1                   \\
-            19                            & 22           & 2                   \\
-            20                            & 23           & 3                   \\
+            1                             & 4            & 2
+            \\
+            2                             & 5            & 3
+            \\
+            3                             & 6            & 1
+            \\
+            4                             & 7            & 2
+            \\
+            5                             & 8            & 3
+            \\
+            6                             & 9            & 1
+            \\
+            7                             & 10           & 2
+            \\
+            8                             & 11           & 3
+            \\
+            9                             & 12           & 1
+            \\
+            10                            & 13           & 2
+            \\
+            11                            & 14           & 3
+            \\
+            12                            & 15           & 1
+            \\
+            13                            & 16           & 2
+            \\
+            14                            & 17           & 3
+            \\
+            15                            & 18           & 1
+            \\
+            16                            & 19           & 2
+            \\
+            17                            & 20           & 3
+            \\
+            18                            & 21           & 1
+            \\
+            19                            & 22           & 2
+            \\
+            20                            & 23           & 3
+            \\
             \hline
       \end{tabular}
       \caption{Ordem de finalização - Escalonador padrão}
