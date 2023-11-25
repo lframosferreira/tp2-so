@@ -9,8 +9,8 @@ int main(){
 
   for (int i = 0; i < LOOPS; i++){
     for (int j = 0; j < ITERATIONS; j++){
-      if (j == 100){
-       yield2();
+        if ((j + 1) % 100 == 0){
+            yield2();
       }
     }
   }

@@ -119,3 +119,7 @@ int sys_yield2(void){
   yield();
   return 1;
 }
+
+int sys_set_prio(void){
+    return set_prio();
+}
