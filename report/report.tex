@@ -223,7 +223,115 @@ que tinha na CPU.
 
 \subsection{Tempo médio em cada estado}
 
+O tempo médio em cada estado
+
 \subsection{Escalonamento}
+
+Para testar a nova política de escalonamento, conforme citado, foi utilizado o
+programa \textit{myprogram}, que cria 20 processos do tipo
+CPU-Bound, mas suas prioridades são estabelecidas conforme seus
+identificadores. A tabela abaixo mostra a ordem de finalização dos processos
+criados com base nisso.
+
+\begin{table}[H]
+      \centering
+      \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Ordem de finalização} & \textbf{PID} & \textbf{Prioriade}
+            \\
+            \hline
+            1                             & 5            & 3
+            \\
+            2                             & 8            & 3
+            \\
+            3                             & 11           & 3
+            \\
+            4                             & 14           & 3
+            \\
+            5                             & 17           & 3
+            \\
+            6                             & 20           & 3
+            \\
+            7                             & 23           & 3
+            \\
+            8                             & 4            & 2
+            \\
+            9                             & 7            & 2
+            \\
+            10                            & 10           & 2
+            \\
+            11                            & 13           & 2
+            \\
+            12                            & 16           & 2
+            \\
+            13                            & 19           & 2
+            \\
+            14                            & 22           & 2
+            \\
+            15                            & 6            & 1
+            \\
+            16                            & 9            & 1
+            \\
+            17                            & 12           & 1
+            \\
+            18                            & 15           & 1
+            \\
+            19                            & 18           & 1
+            \\
+            20                            & 21           & 1
+            \\
+            \hline
+      \end{tabular}
+      \caption{Ordem de finalizaçao - Fila multinível}
+      \label{tab:indexedtable}
+\end{table}
+
+Podemos ver claramente que os processos foram finalizados na ordem correta,
+isto é,aquele com a maior prioridade (3) finalizaram primeiro e, da mesma
+maneira, aqueles com a menor prioridade (2) finalizaram por último. Isso traz
+uma boa inclinação de que o escalonador está funcionando de maneira correta. A
+título de comparação, temos abaixo uma tabela que foi gerada pelo mesmo código
+de \textit{myprogram}, mas com o escalonador padrão do XV6.
+
+\begin{table}[H]
+      \centering
+      \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Ordem de finalização} & \textbf{PID} & \textbf{Prioridade}
+            \\
+            \hline
+            1                             & 4            & 2                   \\
+            2                             & 5            & 3                   \\
+            3                             & 6            & 1                   \\
+            4                             & 7            & 2                   \\
+            5                             & 8            & 3                   \\
+            6                             & 9            & 1                   \\
+            7                             & 10           & 2                   \\
+            8                             & 11           & 3                   \\
+            9                             & 12           & 1                   \\
+            10                            & 13           & 2                   \\
+            11                            & 14           & 3                   \\
+            12                            & 15           & 1                   \\
+            13                            & 16           & 2                   \\
+            14                            & 17           & 3                   \\
+            15                            & 18           & 1                   \\
+            16                            & 19           & 2                   \\
+            17                            & 20           & 3                   \\
+            18                            & 21           & 1                   \\
+            19                            & 22           & 2                   \\
+            20                            & 23           & 3                   \\
+            \hline
+      \end{tabular}
+      \caption{Ordem de finalização - Escalonador padrão}
+      \label{tab:tabela_indexada}
+\end{table}
+
+Podemos ver que nesse caso, como a prioridade é ignorada, já que o escalonador
+padrão do XV6 não leva ela em consideração, os processos são finalizados sem
+considerar eles. Em particular, podemos ver que nesse caso os processos
+finalizaram basicamente na ordme em que foram criados.
+
+\textit{Tratamento de inanição}
 
 \section{Conclusão}
 
