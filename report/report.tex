@@ -177,7 +177,13 @@ identificadores \(pid\):
 \[prio = (pid \mod 3) + 1\]
 
 Portanto, um processo com identificador 15 teria prioridade 1, e um processo
-com identificador 29 teria prioridae 3, por exemplo.
+com identificador 29 teria prioridade 3, por exemplo.
+
+\subsubsection{wait3()}
+
+A chamada de sistema \textit{wait3()} extende a chamada \textit{wait()} e a sua
+única diferença é que ela insere o valor da prioridade final do processo em
+um endereço de memória passado como parâmetro.
 
 \subsection{Programas implementados}
 
@@ -205,6 +211,12 @@ imprime em tela seu identificador e sua prioridade inicial, isto é,prioridade
 estabelecida no moment da criação.
 O laço e o programa finalizam quando todos os processos filhos forem
 finalizados.
+
+\subsubsection{starvation_sanity.c}
+
+O programa funciona basicamente como o \textit{sanity} especificado,mas ao
+invés de retornar os tempos médios irá retornara prioridade final de um
+processo, isto é, a prioridade que ele possuía quando terminou.
 
 \subsection{Mudança no intervalo de preempção}
 
@@ -297,7 +309,8 @@ tipo de processo é tratado pelos mecanismos implementados. Abaixo, temos os
 resultados obtidos para cada uma dessas variações, onde foram criados 10
 processos de cada tipo.
 
-\subsubsection{Aumento do tempo de \textit{sleep} em processos do tipo IO-Bound}
+\subsubsection{Aumento do tempo de \textit{sleep} em processos do tipo
+      IO-Bound}
 
 Neste exemplo, o tempo de \textit{sleep} foi aumentado de 1 para 5, com o
 intuito de compreender como isso impactaria o tempo de \textit{turnaround} dos
@@ -318,12 +331,36 @@ processo do tipo IO-Bound.
       \caption{Tempo médio em cada estado para n = 10}
 \end{table}
 
-Fica claro que o impacto é grande. O tempo de \texit{turnaround} de processos
+Fica claro que o impacto é grande. O tempo de \textit{turnaround} de processos
 do tipo IO-Bound aumentou muito, juntamente, de maneira óbvia, com os tempos
 nos estados \textit{SLEEPING}e \textit{READY}. Isso contribui ainda mais para a
 confirmação de que processos de tipo IO-Bound são grandes gargalos no sistema.
 
 \subsubsection{Aumento do número de laços em processos do tipo CPU-Bound}
+
+Aumentamos também o número de laços externos nos procesos de tipo CPU-Bound de
+100 para 1 milhão,para entender se os novos resultdos indicariam alguma coisa.
+A nova tabela está disposta abaixo.
+
+\begin{table}[H]
+      \centering
+      \begin{tabular}{|c|c|c|c|}
+            \hline
+            Estado     & CPU-Bound & S-CPU &
+            IO-Bound                             \\
+            \hline
+            SLEEPING   & 7         & 8     & 443 \\
+            READY      & 15        & 329   & 214 \\
+            TURNAROUND & 24        & 372   & 691 \\
+            \hline
+      \end{tabular}
+      \caption{Tempo médio em cada estado para n = 10}
+\end{table}
+
+Os resultados, no entanto,não variam muito dos obtidos com a quantidade
+original de laços. Isso indica que processos do tipo CPU-Bound são realmente
+muito rápidos e possuem baixo tempo de turnaround quando desconsideramos filas
+de prioridades.
 
 \subsection{Escalonamento}
 
@@ -455,7 +492,13 @@ finalizaram basicamente na ordme em que foram criados.
 
 Com o uso de filas multinível, processos podem vir a sofrer de inanição no
 sistema, e por isso alguns mecanismos foram utilizados, conforme especificado
-no enunciado, para evitar esse problema.
+no enunciado, para evitar esse problema. Em particular, utilizamos um processo
+de tratamento de inanição que aumenta a prioridade de um processo caso ele não
+tenha
+sido executado em muito tempo. Para testar isso, utilizamos uma variação do
+programa \textit{sanity} que, ao invés de obter os tempos médios de cada tipo
+de processo em cada estado, obtêm a variação das prioridades dos processos
+conforme eles são executados.
 
 \section{Conclusão}
 

@@ -46,8 +46,6 @@ int main(int argc, char **argv) {
 
   while ((wpid = wait2(&retime, &rutime, &stime)) > 0) {
     int wpid_mod3 = wpid % 3;
-    // adicionar switch aqui. Além de ficar mais legivel vai faciliar pegar as
-    // médias
     char *p_type;
     switch (wpid_mod3) {
     case CPU_BOUND:

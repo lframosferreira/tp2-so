@@ -25,3 +25,4 @@
 #define SYS_wait2 23
 #define SYS_yield2 24
 #define SYS_set_prio 25
+#define SYS_wait3 26

@@ -123,3 +123,10 @@ int sys_yield2(void){
 int sys_set_prio(void){
     return set_prio();
 }
+
+int sys_wait3(void){
+  int *prio;
+  if (argptr(0, (char **)&prio, sizeof(int)) < 0)
+    return -1;
+  return wait3((int *)prio);
+}
