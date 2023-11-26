@@ -82,6 +82,7 @@ found:
   p->rutime = 0;
   p->stime = 0;
   p->ctime = 0;
+  p->queue_time = 0;
 
   release(&ptable.lock);
 
@@ -350,6 +351,7 @@ void scheduler(void) {
 
       p->state = RUNNING;
       p->time_slice = INTERV;
+      p->queue_time++;
       p->rutime++; // Aumento running time count do processo
 
       swtch(&(c->scheduler), p->context);
@@ -373,12 +375,12 @@ void scheduler(void) {
             waiting_p->retime++;
           }
         }
-        if (waiting_p->priority == 2 && waiting_p->retime >= P2TO3) {
-          // waiting_p->retime = 0;
+        if (waiting_p->priority == 2 && waiting_p->queue_time >= P2TO3) {
+          waiting_p->queue_time = 0;
           waiting_p->priority = 3;
         }
-        if (waiting_p->priority == 1 && waiting_p->retime >= P1TO2) {
-          // waiting_p->retime = 0;
+        if (waiting_p->priority == 1 && waiting_p->queue_time >= P1TO2) {
+          waiting_p->queue_time = 0;
           waiting_p->priority = 2;
         }
       }

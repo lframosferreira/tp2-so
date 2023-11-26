@@ -59,6 +59,7 @@ struct proc {
   int rutime; // Tempo executando (RUNNING)
 
   int time_slice; // Tempo de processamento que cada processo recebe até preempção ocorrer novamente
+  int queue_time;                // Tempo na fila atual
 };
 
 // Process memory is laid out contiguously, low addresses first:
