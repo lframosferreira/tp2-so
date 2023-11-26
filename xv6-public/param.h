@@ -13,5 +13,5 @@
 #define FSSIZE       1000  // size of file system in blocks
 
 #define INTERV 5 // interval between preemptions
-#define P1TO2 50 //Promove um processo da fila 1 para fila 2 se tempo de espera maior que 1TO2 ticks
+#define P1TO2 200 //Promove um processo da fila 1 para fila 2 se tempo de espera maior que 1TO2 ticks
 #define P2TO3 100 //Promove um processo da fila 2 para fila 3 se tempo de espera maior que 2TO3 ticks

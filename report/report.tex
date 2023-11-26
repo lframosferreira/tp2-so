@@ -24,8 +24,7 @@
 
 O Trabalho Prático 2 da disciplina de Sistemas operacionais teve como proposta
 o estudo e modificação dos algoritmos de escalonamento de processos presente
-no \textit{kernel} do sistema operacional
-\href{https://github.com/mit-pdos/xv6-public}{XV6}.
+no \textit{kernel} do sistema operacional \href{https://github.com/mit-pdos/xv6-public}{XV6}.
 
 O repositório onde está armazenado o código utilizado durante o desenvolvimento
 desse projeto
@@ -153,7 +152,7 @@ escalonador.
 
 A chamada de sustema \textit{yield2()} se trata apenas de uma solução paliativa
 para que a função \textit{yield()} seja utilizada
-nos programas do tipo S-CPU. Sem defini-lá, não era possível utiliar
+nos programas do tipo S-CPU. Sem defini-lá, não era possível utilizar
 \textit{yield()} em um programa de usuário pois não existia uma interface
 definida para seu uso em espaço de usuário no \textit{kernel} do XV6.
 
@@ -214,7 +213,7 @@ finalizados.
 
 \subsubsection{starvation\_sanity.c}
 
-O programa funciona basicamente como o \textit{sanity} especificado,mas ao
+O programa funciona basicamente como o \textit{sanity} especificado, mas ao
 invés de retornar os tempos médios irá retornara prioridade final de um
 processo, isto é, a prioridade que ele possuía quando terminou.
 
@@ -504,8 +503,8 @@ Em um primeiro momento, consideramos os tempos mínims de troca de troca de
 prioridades a seguir:
 
 \begin{enumerate}
-      \item 1 para 2: 100
-      \item 2 para 3: 200
+      \item 1 para 2: 200
+      \item 2 para 3: 100
 \end{enumerate}
 
 Criamos 2 processo de cada tipo com uma prioridade inicial 1 e e checamos as
@@ -546,6 +545,105 @@ se comportar para 5 processos de cada tipo.
             CPU-Bound     & 1                         \\
             CPU-Bound     & 1                         \\
             CPU-Bound     & 1                         \\
+            S-CPU         & 1                         \\
+            S-CPU         & 1                         \\
+            S-CPU         & 1                         \\
+            S-CPU         & 1                         \\
+            S-CPU         & 1                         \\
+            IO-Bound      & 1                         \\
+            IO-Bound      & 1                         \\
+            IO-Bound      & 1                         \\
+            IO-Bound      & 1                         \\
+            IO-Bound      & 1                         \\
+            \hline
+      \end{tabular}
+      \caption{Prioridades finais}
+\end{table}
+
+Notamos que, mesmo aumentando o número de processos, todos finalizaram com
+prioridade 1. Isso indica que o intervalo mínimo para a preempção de mudança de
+prioridades para evitar inanição está muito alto, e devemos utilizar um valor
+maior para que a política de evitar inanição realmente funcione da forma
+desejada.
+
+Vamos agora analisar como a mudança nos valores mínimos de tempo para mudança
+de prioridade impacta os resultados obtidos. Os valores utilizados serão os
+seguintes:
+
+\begin{enumerate}
+      \item 1 para 2: 50
+      \item 2 para 3: 100
+\end{enumerate}
+
+\begin{table}[H]
+      \centering
+      \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Tipo} & \textbf{Prioridade Final} \\
+            \hline
+            CPU-Bound     & 1                         \\
+            CPU-Bound     & 1                         \\
+            S-CPU         & 2                         \\
+            S-CPU         & 2                         \\
+            IO-Bound      & 2                         \\
+            IO-Bound      & 2                         \\
+            \hline
+      \end{tabular}
+      \caption{Prioridades finais}
+\end{table}
+
+Note que, neste caso, mesmo com apenas 2 processos de cada tipo, todos os
+processos do tipo S-CPU ou IO-Bound finalizaram suas execuções com uma
+prioridade 2. Ou seja, a prioridade deles foi aumentanda pelo escalonador a fim
+de evitar inanição.
+
+Para 5 processos de cada tipo, temos a seguinte tabela:
+
+\begin{table}[H]
+      \centering
+      \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Tipo} & \textbf{Prioridade Final} \\
+            \hline
+            CPU-Bound     & 1                         \\
+            CPU-Bound     & 1                         \\
+            CPU-Bound     & 1                         \\
+            CPU-Bound     & 1                         \\
+            CPU-Bound     & 1                         \\
+            S-CPU         & 2                         \\
+            S-CPU         & 2                         \\
+            S-CPU         & 2                         \\
+            S-CPU         & 2                         \\
+            S-CPU         & 2                         \\
+            IO-Bound      & 2                         \\
+            IO-Bound      & 2                         \\
+            IO-Bound      & 2                         \\
+            IO-Bound      & 2                         \\
+            IO-Bound      & 2                         \\
+            \hline
+      \end{tabular}
+      \caption{Prioridades finais}
+\end{table}
+
+Podemos notar que a mesma situação anterior ocorreu, com todos os processos dos
+tipos S-CPU e IO-Bound finalizando com prioridade 2. Isso indica que o período
+de preempção para mudar umprocesso deprioridade 2 para 3 também está muito alto
+para esse tipo de situação, e se quisermos analisar como o escalonador se
+comportaria deveriamos diminuir esse valor. Para isso, fazemos uma última
+mudança, na qual o tempo mínimo para troca entre as prioridade 2 e 3 é mudado
+de 100 para 50, e obtemos a seguinte table para 5 processos de cada tipo.
+
+\begin{table}[H]
+      \centering
+      \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Tipo} & \textbf{Prioridade Final} \\
+            \hline
+            CPU-Bound     & 1                         \\
+            CPU-Bound     & 1                         \\
+            CPU-Bound     & 1                         \\
+            CPU-Bound     & 1                         \\
+            CPU-Bound     & 1                         \\
             S-CPU         & 3                         \\
             S-CPU         & 3                         \\
             S-CPU         & 3                         \\
@@ -561,14 +659,9 @@ se comportar para 5 processos de cada tipo.
       \caption{Prioridades finais}
 \end{table}
 
-Neste caso, notamos que os processos do tipo S-CPU e os processs do tipo
-IO-Bound todos finalizaram com a prioridade 3. Com o número maior de processos,
-e o tempo que estestipos de processo demoraram para finalizar suas execuções, o
-escalonador aumentou suas prioridades para que inanição não ocorresse, conforme
-esperado.
-
-Vamos agora analisar como a mudança nos valores mínimos de tempo para mudança
-de prioridade impacta os resultados obtidos.j
+Nesse caso, fica claro que o tempo mínimo de troca de prioridade entres as
+filas 2 e 3 foi suficiente, uma vez que todos os processos do tipo S-CPU e
+IO-Bound finalizaram suas execuções com prioridade 3.
 
 \section{Conclusão}
 

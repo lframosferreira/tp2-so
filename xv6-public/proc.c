@@ -205,7 +205,7 @@ int fork(void) {
 
   np->state = RUNNABLE;
 
-  np->priority = 1; // Prioridade inicial de todo processo criado
+  np->priority = 2; // Prioridade inicial de todo processo criado
 
   release(&ptable.lock);
 
@@ -379,7 +379,7 @@ void scheduler(void) {
           waiting_p->queue_time = 0;
           waiting_p->priority = 3;
         }
-        if (waiting_p->priority == 1 && waiting_p->queue_time >= P1TO2) {
+        else if (waiting_p->priority == 1 && waiting_p->queue_time >= P1TO2) {
           waiting_p->queue_time = 0;
           waiting_p->priority = 2;
         }
