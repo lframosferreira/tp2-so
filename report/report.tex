@@ -228,7 +228,102 @@ sistema. Para testar isso, utilizamos o programa \textit{sanity}. Abaixo,
 podemos ver o resultado da execução do \textit{sanity} para 30 processos, isto
 é, 10 processos de cada tipo.
 
-POR EXEMPLO AQUI
+\begin{table}[H]
+      \centering
+      \begin{tabular}{|c|c|c|c|}
+            \hline
+            Estado     & CPU-Bound & S-CPU & IO-Bound
+            \\
+            \hline
+            SLEEPING   & 8         & 8     & 446      \\
+            READY      & 15        & 337   & 211      \\
+            TURNAROUND & 24        & 380   & 691      \\
+            \hline
+      \end{tabular}
+      \caption{Tempo médio em cada estado para n = 10}
+\end{table}
+
+Podemos ver que os processos do tipo CPU-Bound são os de menor
+\textit{turnaround}, o que faz todo sentido, uma vez que esses processos são
+dominados por tempo executando algo na CPU, o que fará com que eles terminem
+rapidamente. Faz todo sentido também que esse tipo de processo passe pouco
+tempo
+nos estados \textit{SLEEPING} e \textit{READY} quando comparados aos outros.
+
+Os processos do tipo IO-Bound, por sua vez, são os que mais passaram tempo no
+estado \textit{SLEEPING}, o que também é esperado, dado que nesse tipo de
+programa a chamada de sistema \textit{sleep()} é feita constantemente,
+simulando as esperas por execuções de IO. Com isso, vale notar também que os
+processos desse tipo são os que possuem o maior tempo de \textit{turnaround}
+disparadamente, uma vez que requisições de IO naturalmente são bem demoradas e
+fazem com que os processos que as utilizam demorem mais para serem finalizados
+a partir de sua primeira entrada na CPU.
+
+Os programas do tipo S-CPU, também como imaginado, estão no meio do caminho
+entre os outros dois tipos no quesito tempo de \textit{turnaround}. Nota-se,
+entretanto, que eles são os processos que mais passam tempo no estado
+\textit{READY}. Isso condiz com o esperado dado que após executar a chamada de
+sistema \textit{yield()} diversas vezes, esses processos abrem mão da CPU e
+voltam à um estado de espera com muita frequência.
+
+Uma nova tabela foi também gerada,mas agora com um número maior de processos
+sendo criados, 50 de cada tipo, com o intuito de obter uma valida estatística
+ainda mais pecisa.
+
+\begin{table}[H]
+      \centering
+      \begin{tabular}{|c|c|c|c|}
+            \hline
+            Estado     & CPU-Bound & S-CPU &
+            IO-Bound                             \\
+            \hline
+            SLEEPING   & 5         & 5     & 370 \\
+            READY      & 18        & 345   & 178 \\
+            TURNAROUND & 23        & 365   & 563 \\
+            \hline
+      \end{tabular}
+      \caption{Tempo médio em cada estado para n = 50}
+\end{table}
+
+Nota-se que os padrões observados anteriormente se mantêm para essa nova
+tablea, o que indica que o escalonador mantêm seu comportamente com o aumento
+do número de processos sendo executados.
+
+Para entender ainda melhor como os diferentes tipos de processos funcionam,
+algumas constantes foram alteradas para testar como isso impactaria os tempos
+médios de cada tipo de processo em cada estado. Com essas variações podemos
+entender ainda melhor como a nova política do escalonador funciona e como cada
+tipo de processo é tratado pelos mecanismos implementados. Abaixo, temos os
+resultados obtidos para cada uma dessas variações, onde foram criados 10
+processos de cada tipo.
+
+\subsubsection{Aumento do tempo de \textit{sleep} em processos do tipo IO-Bound}
+
+Neste exemplo, o tempo de \textit{sleep} foi aumentado de 1 para 5, com o
+intuito de compreender como isso impactaria o tempo de \textit{turnaround} dos
+processo do tipo IO-Bound.
+
+\begin{table}[H]
+      \centering
+      \begin{tabular}{|c|c|c|c|}
+            \hline
+            Estado     & CPU-Bound & S-CPU &
+            IO-Bound                              \\
+            \hline
+            SLEEPING   & 7         & 8     & 1028 \\
+            READY      & 16        & 333   & 783  \\
+            TURNAROUND & 24        & 376   & 1974 \\
+            \hline
+      \end{tabular}
+      \caption{Tempo médio em cada estado para n = 10}
+\end{table}
+
+Fica claro que o impacto é grande. O tempo de \texit{turnaround} de processos
+do tipo IO-Bound aumentou muito, juntamente, de maneira óbvia, com os tempos
+nos estados \textit{SLEEPING}e \textit{READY}. Isso contribui ainda mais para a
+confirmação de que processos de tipo IO-Bound são grandes gargalos no sistema.
+
+\subsubsection{Aumento do número de laços em processos do tipo CPU-Bound}
 
 \subsection{Escalonamento}
 
@@ -353,7 +448,7 @@ de \textit{myprogram}, mas com o escalonador padrão do XV6.
 
 Podemos ver que nesse caso, como a prioridade é ignorada, já que o escalonador
 padrão do XV6 não leva ela em consideração, os processos são finalizados sem
-considerar eles. Em particular, podemos ver que nesse caso os processos
+considerar elas. Em particular, podemos ver que nesse caso os processos
 finalizaram basicamente na ordme em que foram criados.
 
 \subsection{Tratamento de inanição}

@@ -305,7 +305,7 @@ int wait(void) {
 //   - swtch to start running that process
 //   - eventually that process transfers control
 //       via swtch back to the scheduler.
-void scheduler2(void) {
+void scheduler(void) {
   struct proc *p;
   struct proc *highest_priority_p = 0;
   struct cpu *c = mycpu();
@@ -391,7 +391,7 @@ void scheduler2(void) {
 // Escalonador antigo. Mantido aqui para fins de testes
 
 void
-scheduler(void)
+scheduler_original(void)
 {
   struct proc *p;
   struct cpu *c = mycpu();
