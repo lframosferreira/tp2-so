@@ -212,7 +212,7 @@ estabelecida no moment da criação.
 O laço e o programa finalizam quando todos os processos filhos forem
 finalizados.
 
-\subsubsection{starvation_sanity.c}
+\subsubsection{starvation\_sanity.c}
 
 O programa funciona basicamente como o \textit{sanity} especificado,mas ao
 invés de retornar os tempos médios irá retornara prioridade final de um
@@ -499,6 +499,76 @@ sido executado em muito tempo. Para testar isso, utilizamos uma variação do
 programa \textit{sanity} que, ao invés de obter os tempos médios de cada tipo
 de processo em cada estado, obtêm a variação das prioridades dos processos
 conforme eles são executados.
+
+Em um primeiro momento, consideramos os tempos mínims de troca de troca de
+prioridades a seguir:
+
+\begin{enumerate}
+      \item 1 para 2: 100
+      \item 2 para 3: 200
+\end{enumerate}
+
+Criamos 2 processo de cada tipo com uma prioridade inicial 1 e e checamos as
+prioridades finais, e os resultados estão na tabela a seguir.
+
+\begin{table}[H]
+      \centering
+      \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Tipo} & \textbf{Prioridade Final} \\
+            \hline
+            CPU-Bound     & 1                         \\
+            CPU-Bound     & 1                         \\
+            S-CPU         & 1                         \\
+            S-CPU         & 1                         \\
+            IO-Bound      & 1                         \\
+            IO-Bound      & 1                         \\
+            \hline
+      \end{tabular}
+      \caption{Prioridades finais}
+\end{table}
+
+Podemos notar que os processos finalizaram na ordem esperada para cada tipo,
+como visto na sessão anterior, mas mais importante, notamos que os processos
+não mudaram de prioridade ao longo da execução. Isso se deve ao fato deque como
+haviam poucos processos, eles todos acabaram antes da preempção de mudança de
+prioridades para evitar inanição. Vamos analisar agora como o escalonador irá
+se comportar para 5 processos de cada tipo.
+
+\begin{table}[H]
+      \centering
+      \begin{tabular}{|c|c|c|}
+            \hline
+            \textbf{Tipo} & \textbf{Prioridade Final} \\
+            \hline
+            CPU-Bound     & 1                         \\
+            CPU-Bound     & 1                         \\
+            CPU-Bound     & 1                         \\
+            CPU-Bound     & 1                         \\
+            CPU-Bound     & 1                         \\
+            S-CPU         & 3                         \\
+            S-CPU         & 3                         \\
+            S-CPU         & 3                         \\
+            S-CPU         & 3                         \\
+            S-CPU         & 3                         \\
+            IO-Bound      & 3                         \\
+            IO-Bound      & 3                         \\
+            IO-Bound      & 3                         \\
+            IO-Bound      & 3                         \\
+            IO-Bound      & 3                         \\
+            \hline
+      \end{tabular}
+      \caption{Prioridades finais}
+\end{table}
+
+Neste caso, notamos que os processos do tipo S-CPU e os processs do tipo
+IO-Bound todos finalizaram com a prioridade 3. Com o número maior de processos,
+e o tempo que estestipos de processo demoraram para finalizar suas execuções, o
+escalonador aumentou suas prioridades para que inanição não ocorresse, conforme
+esperado.
+
+Vamos agora analisar como a mudança nos valores mínimos de tempo para mudança
+de prioridade impacta os resultados obtidos.
 
 \section{Conclusão}
 

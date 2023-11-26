@@ -204,7 +204,7 @@ int fork(void) {
 
   np->state = RUNNABLE;
 
-  np->priority = 2; // Prioridade inicial de todo processo criado
+  np->priority = 1; // Prioridade inicial de todo processo criado
 
   release(&ptable.lock);
 
