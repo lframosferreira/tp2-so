@@ -37,7 +37,6 @@ pode ser encontrado \href{https://github.com/lframosferreira/tp2-so}{neste
       \item Qual a política de escalonamento é utilizada atualmente no XV6?
 
             A política de escalonamento utilizada no XV6 é uma política de
-
             \href{https://en.wikipedia.org/wiki/Round-robin_scheduling}{\textit{Round
                         Robin}} sem prioridades, ou seja, o escalonador irá
             checar
@@ -125,53 +124,52 @@ processos, para facilitar a implementação.
 
 \subsection{Chamadas de sistema}
 
-Ao todo, quatro novas chamdas de sistema foram implementadas para facilitar o
-desenvolvimento do trabalho, e o propósito de cada uma delas está desrito a
+Ao todo, quatro novas chamadas de sistema foram implementadas para facilitar o
+desenvolvimento do trabalho, e o propósito de cada uma delas está descrito a
 seguir.
 
 \subsubsection{change\_prio()}
 
 Conforme especificado no enunciado, a chamada de sistema
-\textit{change\_prio()} deve ter utilizada para mudar
+\textit{change\_prio()} deve ser utilizada para mudar
 a prioridade do processo atual. Sua implementação é simples, e basta trafegar
-por toda a lista de processos, encontrar o proesso com o identificador correto
-e mudarsua prioridade conforme o parâmetro desejado.
+por toda a lista de processos, encontrar o processo com o identificador correto
+e mudar sua prioridade conforme o parâmetro desejado.
 
 \subsubsection{wait2()}
 
 Conforme também especificado no enunciado, a chamada de sistema
 \textit{wait2()} deve ser utilizada como uma
-extensão da chamada de sistema \textit{wait()} mas com algumas ações a mais. Em
+extensão da chamada de sistema \textit{wait()} mas com algumas ações adicionais. Em
 particular, ela deve também atribuir a três posições de memória os valores
-totais de tempo que o processo passou nos estados \textit{READY},
+totais de tempo em que o processo passou nos estados \textit{READY},
 \textit{RUNNING} e \textit{SLEEPING}, de modo que tais valores possam ser
 utilizados posteriormente na análise de dados das modificações propostas para o
 escalonador.
 
 \subsubsection{yield2()}
 
-A chamada de sustema \textit{yield2()} se trata apenas de uma solução paliativa
+A chamada de sistema \textit{yield2()} se trata apenas de uma solução paliativa
 para que a função \textit{yield()} seja utilizada
-nos programas do tipo S-CPU. Sem defini-lá, não era possível utilizar
+nos programas do tipo S-CPU. Sem defini-la, não era possível utilizar
 \textit{yield()} em um programa de usuário pois não existia uma interface
 definida para seu uso em espaço de usuário no \textit{kernel} do XV6.
 
-Em suma, a chamada \textit{yield2()} apenas chama a função \textit{yield()}.
+Resumidamente, a chamada \textit{yield2()} apenas chama a função \textit{yield()}.
 
 \subsubsection{set\_prio()}
 
 A chamada de sistema \textit{set\_prio()} deve ser utilizada para modificar a
-prioridade de um processo. Seu principal intuito é de ajudar nos testes do
+prioridade de um processo. Seu principal intuito é ajudar nos testes do
 escalonador e checar se ele está funcionando da forma que deveria.
 
 Da maneira que interpretamos, uma boa forma de implementar o
 \textit{set\_prio()} seria como uma extensão da chamada de sistema
-\textit{fork()}, mas que permita a escolha dinâmica daprioridade do novo
+\textit{fork()}, mas que permita a escolha dinâmica da prioridade do novo
 processo criado. Dessa forma, sua implementação foi feita exatamente como uma
 cópia de \textit{fork()}, mas a prioridade \(prio\) dos processos criados a
 partir dela
-não é 2 por padrão, mas seguem a seguinte equação a partir de seus próprios
-identificadores \(pid\):
+não é 2 por padrão: é usada a seguinte equação, basada nos identificadores de processo \((pid)\):
 
 \[prio = (pid \mod 3) + 1\]
 
@@ -180,7 +178,7 @@ com identificador 29 teria prioridade 3, por exemplo.
 
 \subsubsection{wait3()}
 
-A chamada de sistema \textit{wait3()} extende a chamada \textit{wait()} e a sua
+A chamada de sistema \textit{wait3()} estende a chamada \textit{wait()} e a sua
 única diferença é que ela insere o valor da prioridade final do processo em
 um endereço de memória passado como parâmetro.
 
@@ -191,13 +189,13 @@ eles
 os programas \textit{CPU-Bound}, \textit{S-CPU} e \textit{IO-Bound}, e a
 especificação de como cada um eles funciona está no enunciado.
 
-Outros dois programas também foram implementados, sendo eles o progrma
+Outros três programas também foram implementados, sendo eles o programa
 \textit{sanity}, cujo objetivo é testar e analisar os tempos que cada processo
-passou em cada estado, e um programa extra, que nós denominamos
-\textit{myprogram}, cujo objetivo principal é testar o correto funcionamento do
-novo escalonador. As especificações do programa \textit{sanity} estão definidas
-no enunciado. Alguns detalhes relativos ao programa
-\textit{myprogram}, no entanto, são detalhados abaixo.
+passou em cada estado, o \textit{starvation\_sanity}, que é descrito a seguir, e
+um programa extra, que nós denominamos \textit{myprogram}, cujo objetivo
+principal é testar o correto funcionamento do novo escalonador (seu
+funcionamento também será detalhado). As especificações do programa
+\textit{sanity} estão definidas no enunciado.
 
 \subsubsection{myprogram.c}
 
@@ -206,15 +204,15 @@ sistema \textit{set\_prio()}, que irá criar os novos processos e atribuir uma
 prioridade a eles com base no identificador que receberem.
 Após isso, o programa chama dentro de um laço \textit{while} a chamada de
 sistema \textit{wait()} e, sempre que um de seus processos filhos finaliza,
-imprime em tela seu identificador e sua prioridade inicial, isto é,prioridade
-estabelecida no moment da criação.
+imprime na tela seu identificador e sua prioridade inicial, isto é, a prioridade
+estabelecida no momento da criação.
 O laço e o programa finalizam quando todos os processos filhos forem
 finalizados.
 
 \subsubsection{starvation\_sanity.c}
 
 O programa funciona basicamente como o \textit{sanity} especificado, mas ao
-invés de retornar os tempos médios irá retornara prioridade final de um
+invés de retornar os tempos médios irá retornar prioridade final de um
 processo, isto é, a prioridade que ele possuía quando terminou.
 
 \subsection{Mudança no intervalo de preempção}
@@ -275,11 +273,11 @@ entre os outros dois tipos no quesito tempo de \textit{turnaround}. Nota-se,
 entretanto, que eles são os processos que mais passam tempo no estado
 \textit{READY}. Isso condiz com o esperado dado que após executar a chamada de
 sistema \textit{yield()} diversas vezes, esses processos abrem mão da CPU e
-voltam à um estado de espera com muita frequência.
+voltam a um estado de espera com muita frequência.
 
-Uma nova tabela foi também gerada,mas agora com um número maior de processos
-sendo criados, 50 de cada tipo, com o intuito de obter uma valida estatística
-ainda mais pecisa.
+Uma nova tabela foi também gerada, mas agora com um número maior de processos
+sendo criados (50 de cada tipo), com o intuito de obter uma validação estatística
+ainda mais precisa.
 
 \begin{table}[H]
       \centering
@@ -297,7 +295,7 @@ ainda mais pecisa.
 \end{table}
 
 Nota-se que os padrões observados anteriormente se mantêm para essa nova
-tablea, o que indica que o escalonador mantêm seu comportamente com o aumento
+tabela, o que indica que o escalonador mantêm seu comportamento com o aumento
 do número de processos sendo executados.
 
 Para entender ainda melhor como os diferentes tipos de processos funcionam,
@@ -332,13 +330,13 @@ processo do tipo IO-Bound.
 
 Fica claro que o impacto é grande. O tempo de \textit{turnaround} de processos
 do tipo IO-Bound aumentou muito, juntamente, de maneira óbvia, com os tempos
-nos estados \textit{SLEEPING}e \textit{READY}. Isso contribui ainda mais para a
+nos estados \textit{SLEEPING} e \textit{READY}. Isso contribui ainda mais para a
 confirmação de que processos de tipo IO-Bound são grandes gargalos no sistema.
 
 \subsubsection{Aumento do número de laços em processos do tipo CPU-Bound}
 
-Aumentamos também o número de laços externos nos procesos de tipo CPU-Bound de
-100 para 1 milhão,para entender se os novos resultdos indicariam alguma coisa.
+Aumentamos também o número de laços externos nos processos de tipo CPU-Bound de
+100 para 1 milhão,para entender se os novos resultados indicariam alguma coisa.
 A nova tabela está disposta abaixo.
 
 \begin{table}[H]
@@ -356,7 +354,7 @@ A nova tabela está disposta abaixo.
       \caption{Tempo médio em cada estado para n = 10}
 \end{table}
 
-Os resultados, no entanto,não variam muito dos obtidos com a quantidade
+Os resultados, no entanto, não variam muito dos obtidos com a quantidade
 original de laços. Isso indica que processos do tipo CPU-Bound são realmente
 muito rápidos e possuem baixo tempo de turnaround quando desconsideramos filas
 de prioridades.
@@ -373,7 +371,7 @@ criados com base nisso.
       \centering
       \begin{tabular}{|c|c|c|}
             \hline
-            \textbf{Ordem de finalização} & \textbf{PID} & \textbf{Prioriade}
+            \textbf{Ordem de finalização} & \textbf{PID} & \textbf{Prioridade}
             \\
             \hline
             1                             & 5            & 3
@@ -418,14 +416,14 @@ criados com base nisso.
             \\
             \hline
       \end{tabular}
-      \caption{Ordem de finalizaçao - Fila multinível}
+      \caption{Ordem de finalização - Fila multinível}
       \label{tab:indexedtable}
 \end{table}
 
 Podemos ver claramente que os processos foram finalizados na ordem correta,
-isto é,aquele com a maior prioridade (3) finalizaram primeiro e, da mesma
-maneira, aqueles com a menor prioridade (2) finalizaram por último. Isso traz
-uma boa inclinação de que o escalonador está funcionando de maneira correta. A
+isto é, aqueles com a maior prioridade (3) finalizaram primeiro e, da mesma
+maneira, aqueles com a menor prioridade (1) finalizaram por último. Isso traz
+uma boa indicação de que o escalonador está funcionando de maneira correta. A
 título de comparação, temos abaixo uma tabela que foi gerada pelo mesmo código
 de \textit{myprogram}, mas com o escalonador padrão do XV6.
 
@@ -483,9 +481,9 @@ de \textit{myprogram}, mas com o escalonador padrão do XV6.
 \end{table}
 
 Podemos ver que nesse caso, como a prioridade é ignorada, já que o escalonador
-padrão do XV6 não leva ela em consideração, os processos são finalizados sem
-considerar elas. Em particular, podemos ver que nesse caso os processos
-finalizaram basicamente na ordme em que foram criados.
+padrão do XV6 não a leva em consideração.
+Em particular, podemos ver que nesse caso os processos
+finalizaram basicamente na ordem em que foram criados.
 
 \subsection{Tratamento de inanição}
 
@@ -496,16 +494,16 @@ de tratamento de inanição que aumenta a prioridade de um processo caso ele nã
 tenha
 sido executado em muito tempo. Para testar isso, utilizamos uma variação do
 programa \textit{sanity} que, ao invés de obter os tempos médios de cada tipo
-de processo em cada estado, obtêm a variação das prioridades dos processos
+de processo em cada estado, obtém a variação das prioridades dos processos
 conforme eles são executados.
 
-Em um primeiro momento, consideramos os tempos mínims de troca de troca de
+Em um primeiro momento, consideramos os tempos mínimos de troca de
 prioridades a seguir:
 
-\begin{enumerate}
+\begin{itemize}
       \item 1 para 2: 200
       \item 2 para 3: 100
-\end{enumerate}
+\end{itemize}
 
 Criamos 2 processo de cada tipo com uma prioridade inicial 1 e e checamos as
 prioridades finais, e os resultados estão na tabela a seguir.
@@ -529,8 +527,8 @@ prioridades finais, e os resultados estão na tabela a seguir.
 
 Podemos notar que os processos finalizaram na ordem esperada para cada tipo,
 como visto na sessão anterior, mas mais importante, notamos que os processos
-não mudaram de prioridade ao longo da execução. Isso se deve ao fato deque como
-haviam poucos processos, eles todos acabaram antes da preempção de mudança de
+não mudaram de prioridade ao longo da execução. Isso se deve ao fato de que como
+haviam poucos processos, todos eles acabaram antes da preempção de mudança de
 prioridades para evitar inanição. Vamos analisar agora como o escalonador irá
 se comportar para 5 processos de cada tipo.
 
@@ -570,10 +568,10 @@ Vamos agora analisar como a mudança nos valores mínimos de tempo para mudança
 de prioridade impacta os resultados obtidos. Os valores utilizados serão os
 seguintes:
 
-\begin{enumerate}
+\begin{itemize}
       \item 1 para 2: 50
       \item 2 para 3: 100
-\end{enumerate}
+\end{itemize}
 
 \begin{table}[H]
       \centering
@@ -594,7 +592,7 @@ seguintes:
 
 Note que, neste caso, mesmo com apenas 2 processos de cada tipo, todos os
 processos do tipo S-CPU ou IO-Bound finalizaram suas execuções com uma
-prioridade 2. Ou seja, a prioridade deles foi aumentanda pelo escalonador a fim
+prioridade 2. Ou seja, a prioridade deles foi aumentada pelo escalonador a fim
 de evitar inanição.
 
 Para 5 processos de cada tipo, temos a seguinte tabela:
@@ -627,11 +625,11 @@ Para 5 processos de cada tipo, temos a seguinte tabela:
 
 Podemos notar que a mesma situação anterior ocorreu, com todos os processos dos
 tipos S-CPU e IO-Bound finalizando com prioridade 2. Isso indica que o período
-de preempção para mudar umprocesso deprioridade 2 para 3 também está muito alto
+de preempção para mudar um processo de prioridade 2 para 3 também está muito alto
 para esse tipo de situação, e se quisermos analisar como o escalonador se
-comportaria deveriamos diminuir esse valor. Para isso, fazemos uma última
-mudança, na qual o tempo mínimo para troca entre as prioridade 2 e 3 é mudado
-de 100 para 50, e obtemos a seguinte table para 5 processos de cada tipo.
+comportaria deveríamos diminuir esse valor. Para isso, fazemos uma última
+mudança, na qual o tempo mínimo para troca entre as prioridade 2 e 3 é alterado
+de 100 para 50, e obtemos a seguinte tabela para 5 processos de cada tipo.
 
 \begin{table}[H]
       \centering
@@ -670,8 +668,8 @@ permitiu um aprendizado ainda mais aprofundado acerca de como um sistema
 operacional funciona, uma vez que abriu portas para explorar, modificar e
 analisar como um \textit{kernel} realmente é implementado.
 
-Fazer as modificações próprias para alterar as políticas de escalonamento e
-preempção tornaram a compreensão de como eles operam mais simples, e ampliaram
+Fazer as próprias modificações para alterar as políticas de escalonamento e
+preempção tornou a compreensão de como elas operam mais simples, e ampliou
 a visão de como um processo realmente é manipulado dentro do sistema.
 
 \section{Referências}
